@@ -19,6 +19,7 @@ Features:
 * shift-key increases movement rate / animation speed
 * sprite array for managing map tiles
 * object serialization (save/load level and other game state data)
+* escape key menu for user input and informative/instructive text
 
 ![racd](https://user-images.githubusercontent.com/74695555/108581058-9fdeec80-72eb-11eb-95fe-32e8bc4f35fe.png)
 
