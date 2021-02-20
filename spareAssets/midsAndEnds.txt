@@ -1,0 +1,157 @@
+//create special mids and ends
+
+    private void CreatSpecialEnds(float pSE)
+    {
+        for (int i = mapBorder; i < width - mapBorder; i++)
+        {
+            for (int j = mapBorder; j < height - mapBorder; j++)
+            {
+                int numEmpty = 0;
+                if (cells[i - 1][j - 1] == 0) { numEmpty++; }
+                if (cells[i + 1][j + 1] == 0) { numEmpty++; }
+                if (cells[i + 1][j - 1] == 0) { numEmpty++; }
+                if (cells[i - 1][j + 1] == 0) { numEmpty++; }
+                if (cells[i][j + 1] == 0) { numEmpty++; }
+                if (cells[i][j - 1] == 0) { numEmpty++; }
+                if (cells[i + 1][j] == 0) { numEmpty++; }
+                if (cells[i - 1][j] == 0) { numEmpty++; }
+                if (cells[i + 1][j] != 1001 && cells[i - 1][j] != 1001 && cells[i][j + 1] != 1001 && cells[i][j - 1] != 1001 && cells[i][j] < 0 && numEmpty > 6)
+                {
+                    float chance = Random.value;
+                    if (chance < pSE) {
+                        cells[i][j] = 9998;
+                    }
+                    else {
+                        cells[i][j] = 0;
+                    }
+                }
+            }
+        }
+        for (int i = width - mapBorder - 1; i > mapBorder; i--)
+        {
+            for (int j = height - mapBorder - 1; j > mapBorder; j--)
+            {
+                int numEmpty = 0;
+                if (cells[i - 1][j - 1] == 0) { numEmpty++; }
+                if (cells[i + 1][j + 1] == 0) { numEmpty++; }
+                if (cells[i + 1][j - 1] == 0) { numEmpty++; }
+                if (cells[i - 1][j + 1] == 0) { numEmpty++; }
+                if (cells[i][j + 1] == 0) { numEmpty++; }
+                if (cells[i][j - 1] == 0) { numEmpty++; }
+                if (cells[i + 1][j] == 0) { numEmpty++; }
+                if (cells[i - 1][j] == 0) { numEmpty++; }
+                if (cells[i + 1][j] != 1001 && cells[i - 1][j] != 1001 && cells[i][j + 1] != 1001 && cells[i][j - 1] != 1001 && cells[i][j] < 0 && numEmpty > 6)
+                {
+                    float chance = Random.value;
+                    if (chance < pSE)
+                    {
+                        cells[i][j] = 9998;
+                    }
+                    else
+                    {
+                        cells[i][j] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    private void CreateSpecialMids(float pSM)
+    {
+        for (int i = mapBorder; i < width - mapBorder; i++)
+        {
+            for (int j = mapBorder; j < height - mapBorder; j++)
+            {
+                bool noDefects = true;
+                if (j + 2 < height - mapBorder) {
+                    if (cells[i + 1][j + 2] != 0) { noDefects = false; }
+                }
+                if (cells[i + 1][j + 1] != 0) { noDefects = false; }
+                if (cells[i + 1][j] != 0) { noDefects = false; }
+                if (cells[i + 1][j - 1] != 0) { noDefects = false; }
+                if (j - 2 > mapBorder) {
+                    if (cells[i + 1][j - 2] != 0) { noDefects = false; }
+                }
+                if (j + 2 < height - mapBorder) {
+                    if (cells[i - 1][j + 2] != 0) { noDefects = false; }
+                }
+                if (cells[i - 1][j + 1] != 0) { noDefects = false; }
+                if (cells[i - 1][j] != 0) { noDefects = false; }
+                if (cells[i - 1][j - 1] != 0) { noDefects = false; }
+                if (j - 2 > mapBorder) {
+                    if (cells[i - 1][j - 2] != 0) { noDefects = false; }
+                }
+                if ( cells[i][j] < 0 && cells[i][j + 1] < 0 && cells[i][j - 1] < 0 && cells[i][j + 2] < 0 && cells[i][j - 2] < 0 && noDefects == true )
+                {
+                    float chance = Random.value;
+                    if (chance < pSM) {
+                        cells[i][j] = 9999;
+                    }
+                }
+            }
+        }
+        for (int i = mapBorder; i < width - mapBorder; i++)
+        {
+            for (int j = mapBorder; j < height - mapBorder; j++)
+            {
+                bool noDefects = true;
+                if (i + 2 < width - mapBorder) {
+                    if (cells[i + 2][j + 1] != 0) { noDefects = false; }
+                }
+                if (cells[i + 1][j + 1] != 0) { noDefects = false; }
+                if (cells[i][j + 1] != 0) { noDefects = false; }
+                if (cells[i + 1][j + 1] != 0) { noDefects = false; }
+                if (i - 2 > mapBorder) {
+                    if (cells[i - 2][j + 1] != 0) { noDefects = false; }
+                }
+                if (i - 2 > mapBorder) {
+                    if (cells[i - 2][j - 1] != 0) { noDefects = false; }
+                }
+                if (cells[i - 1][j - 1] != 0) { noDefects = false; }
+                if (cells[i][j - 1] != 0) { noDefects = false; }
+                if (cells[i + 1][j - 1] != 0) { noDefects = false; }
+                if (i + 2 < width - mapBorder) {
+                    if (cells[i + 2][j - 1] != 0) { noDefects = false; }
+                }
+                if ( cells[i][j] < 0 && cells[i + 1][j] < 0 && cells[i - 1][j] < 0 && cells[i + 2][j] < 0 && cells[i - 2][j] < 0 && noDefects == true )
+                {
+                    float chance = Random.value;
+                    if (chance < pSM)
+                    {
+                        cells[i][j] = 9999;
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    //printing...
+        int num;
+        Debug.Log("END HALL SPECIALS");
+        num = 0;
+        for (int i = 1; i < width; i++)
+        {
+            for (int j = 1; j < height; j++)
+            {
+                if (cells[i][j] == 9998) {
+                    Debug.Log("End special" + " x " + i + "  y " + j);
+                    num++;
+                }
+            }
+        }
+        Debug.Log("Number of end specials:  " + num);
+        Debug.Log("MID HALL SPECIALS");
+        num = 0;
+        for (int i = 1; i < width; i++)
+        {
+            for (int j = 1; j < height; j++)
+            {
+                if (cells[i][j] == 9999)
+                {
+                    Debug.Log("Mid special" + " x " + i + "  y " + j);
+                    num++;
+                }
+            }
+        }
+        Debug.Log("Number of mid specials:  " + num);

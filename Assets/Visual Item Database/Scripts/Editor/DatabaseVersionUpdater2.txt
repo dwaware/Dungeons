@@ -1,0 +1,306 @@
+using UnityEngine;
+using UnityEditor;
+using System.IO;
+using System.Collections.Generic;
+using ItemSystem;
+using ItemSystem.Database;
+
+public partial class DatabaseVersionUpdater : EditorWindow
+{
+    enum Process
+    {
+        MoveTypes,
+        MoveItems
+    }
+
+    VIDItemListsV28 vid1;
+    VIDItemListsV3 vid2;
+    bool addedItemTypes, readyForFinalTransfer, tempSettingsChecked, showedSpeedWarning;
+
+    void OnGUI()
+    {
+        if (!showedSpeedWarning)
+        {
+            EditorUtility.DisplayDialog("Please Be Patient",
+           "Every time you click on one of the three update buttons please wait for Unity to refresh before clicking the next button or you risk the update not working correctly.", "OK");
+            showedSpeedWarning = true;
+        }
+
+        //Nothing can be done before the item type control window is ready to go
+        if (!itemTypeWindowisGood)
+        {
+            GUILayout.Label("There Are Some Errors With The 'Item Type Control' Window.\nPlease Open That Window and Make Sure To Fix It's Errors By Using The Error Messages.");
+            return;
+        }
+
+        if (!tempSettingsChecked)
+        {
+            CheckTempSettings();
+            tempSettingsChecked = true;
+        }
+
+        //Transfer Item Types
+        GUI.color = Color.cyan;
+        if (!addedItemTypes && GUILayout.Button("Transfer Item Types") && TypeWindowIsReady())
+        {
+            UpdateVersion(Process.MoveTypes);
+            addedItemTypes = true;
+
+            if (!File.Exists(tempSettingsFullPath))
+            {
+                File.CreateText(tempSettingsFullPath);
+                AssetDatabase.Refresh();
+            }
+        }
+
+        //Generate code for item transfer
+        GUI.color = Color.yellow;
+        if (addedItemTypes && !readyForFinalTransfer && GUILayout.Button("Setup Item Transfer"))
+        {
+            UpdateVersion(Process.MoveItems);
+            readyForFinalTransfer = true;
+
+            File.AppendAllText(tempSettingsFullPath, "True");
+            AssetDatabase.Refresh();
+        }
+
+        //Transfer Items
+        GUI.color = Color.green;
+        if (addedItemTypes && readyForFinalTransfer && GUILayout.Button("Transfer Items"))
+        {
+            MoveItems();
+            File.Delete(tempSettingsFullPath);
+            AssetDatabase.Refresh();
+            FinishedUpdating();
+        }
+
+        GUI.color = Color.white;
+    }
+
+    void UpdateVersion(Process process)
+    {
+        //Old VIDItemLists
+        string[] oldVIDLists = File.ReadAllLines(Directory.GetCurrentDirectory().Replace("\\", "/") + "/" + scriptsFolderPath + VIDItemListsV28.itemListsName + ".cs");
+        List<ItemListData> oldVIDListsData = new List<ItemListData>();
+
+        //Current VIDItemLists
+        string[] vidItemLists = File.ReadAllLines(Directory.GetCurrentDirectory().Replace("\\", "/") + "/" + scriptsFolderPath + VIDItemListsV3.itemListsName + ".cs");
+        List<ItemListData> vidItemListsData = new List<ItemListData>();
+
+        //Load needed scriptable objects
+        vid1 = Resources.Load<VIDItemListsV28>(VIDItemListsV28.itemListsName);
+        if (!vid1)
+        {
+            vid1 = CreateInstance<VIDItemListsV28>();
+            AssetDatabase.CreateAsset(vid1, resourcesFolderPath + VIDItemListsV28.itemListsName + ".asset");
+            AssetDatabase.SaveAssets();
+        }
+
+        vid2 = Resources.Load<VIDItemListsV3>(VIDItemListsV3.itemListsName);
+        if (!vid2)
+        {
+            vid2 = CreateInstance<VIDItemListsV3>();
+            AssetDatabase.CreateAsset(vid2, resourcesFolderPath + VIDItemListsV3.itemListsName + ".asset");
+            AssetDatabase.SaveAssets();
+        }
+        AssetDatabase.Refresh();
+
+        int iceIndex = -1, icbIndex = -1;
+
+        //Process old VIDLists class
+        for (int i = 0; i < oldVIDLists.Length; i++)
+        {
+            if (oldVIDLists[i].Contains("//#VID-ICB"))
+            {
+                icbIndex = i;
+            }
+
+            //If we found the ice index that means we now have all the info we need, so we will start collecting data
+            else if (oldVIDLists[i].Contains("//#VID-ICE"))
+            {
+                iceIndex = i;
+
+                //In between the indices make completely sure it is the correct line and then add it to the collection of list data
+                for (int j = icbIndex + 1; j < iceIndex; j++)
+                    if (oldVIDLists[j].Contains("public") && oldVIDLists[j].Contains("List<") && oldVIDLists[j].Contains("auto"))
+                        oldVIDListsData.Add(GetItemListData(oldVIDLists[j]));
+
+                break;
+            }
+        }
+
+        //Process VIDItemListsV3 class
+        for (int i = 0; i < vidItemLists.Length; i++)
+        {
+            if (vidItemLists[i].Contains("//#VID-ICB"))
+            {
+                icbIndex = i;
+            }
+
+            else if (vidItemLists[i].Contains("//#VID-ICE"))
+            {
+                iceIndex = i;
+
+                for (int j = icbIndex + 1; j < iceIndex; j++)
+                    if (vidItemLists[j].Contains("public") && vidItemLists[j].Contains("List<") && vidItemLists[j].Contains("auto"))
+                        vidItemListsData.Add(GetItemListData(vidItemLists[j]));
+
+                break;
+            }
+        }
+
+        //Moving types
+        if (process == Process.MoveTypes)
+        {
+            //If a type only exists in the old database then transfer it
+            for (int i = 0; i < oldVIDListsData.Count; i++)
+            {
+                bool addType = true;
+                for (int j = 0; j < vidItemListsData.Count; j++)
+                {
+                    if (vidItemListsData[j].type == oldVIDListsData[i].type)
+                    {
+                        addType = false;
+                        break;
+                    }
+                }
+
+                //Type doesn't exist so we transfer it to 'VIDItemLists'
+                if (addType)
+                    AddType(oldVIDListsData[i]);
+            }
+
+            //Transfer Subtypes
+            for (int i = 0; i < vid1.subtypes.Count; i++)
+                AddSubtype(vid1.subtypes[i].type, vid1.subtypes[i].name);
+
+            GetWindow<ItemTypeEditorWindow>(false, "Add Item Type", true).Close();  //Since we are done close the item type window
+			
+			//Remove subtype enums from the old VIDItemLists
+            string[] lines = File.ReadAllLines(currentDir + scriptsFolderPath + VIDItemListsV28.itemListsName + ".cs");
+            List<string> vid = new List<string>();
+            int isnbIndex = -1, isneIndex = -1;
+
+            vid.AddRange(lines);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Contains("//#VID-ISNB"))
+                    isnbIndex = i - 1;
+                else if (lines[i].Contains("//#VID-ISNE"))
+                {
+                    isneIndex = i + 1;
+                    vid.RemoveRange(isnbIndex, isneIndex - isnbIndex);
+                    break;
+                }
+            }
+
+            File.WriteAllLines(currentDir + scriptsFolderPath + VIDItemListsV28.itemListsName + ".cs", vid.ToArray());
+        }
+
+        //Transfering items
+        else if (process == Process.MoveItems)
+        {
+            /*Item Transfer*/
+            string[] updaterFile = File.ReadAllLines(Directory.GetCurrentDirectory().Replace("\\", "/") + "/" + editorFolderPath + "DatabaseVersionUpdater2.cs");
+            List<string> updaterNew = new List<string>();
+
+            int tibIndex = -1, tieIndex = -1, offset = 0;
+
+            //Get required indices
+            for (int i = 0; i < updaterFile.Length; i++)
+            {
+                if (!updaterFile[i].Contains(".Contains") && updaterFile[i].Contains("//#VID-TIB"))
+                    tibIndex = i;
+                else if (!updaterFile[i].Contains(".Contains") && updaterFile[i].Contains("//#VID-TIE"))
+                    tieIndex = i;
+
+                if (tibIndex != -1 && tibIndex != i && tieIndex == -1)
+                    continue;
+
+                updaterNew.Add(updaterFile[i]);
+            }
+
+            //Generate item transfer code
+            for (int i = 0; i < oldVIDListsData.Count; i++)
+            {
+                for (int j = 0; j < vidItemListsData.Count; j++)
+                {
+                    if (vidItemListsData[j].className == oldVIDListsData[i].className && vidItemListsData[j].type == oldVIDListsData[i].type)
+                    {
+                        updaterNew.Insert(tieIndex + offset, string.Format("\t\tvid2.auto{0}.AddRange(vid1.auto{0});", oldVIDListsData[i].type.ToString()));
+                        break;
+                    }
+                }
+            }
+
+            //Output code, refresh and then move item
+            File.WriteAllLines(Directory.GetCurrentDirectory().Replace("\\", "/") + "/" + editorFolderPath + "DatabaseVersionUpdater2.cs", updaterNew.ToArray());
+            AssetDatabase.Refresh();
+            MoveItems();
+
+            //Move Subtype Items
+            for (int i = 0; i < vid1.subtypes.Count; i++)
+                vid2.subtypes[i].itemIDs.AddRange(vid1.subtypes[i].itemIDs);
+        }
+
+    }
+
+    /// <summary>
+    /// Process a line of a list and returns an 'ItemListData' class containing the list's data
+    /// </summary>
+    /// <param name="line"></param>
+    /// <returns></returns>
+    ItemListData GetItemListData(string line)
+    {
+        line = line.Trim();
+        string[] splitLine = line.Split(new char[] { ' ', '<', '>' });
+        return new ItemListData(splitLine[2], (ItemType)System.Enum.Parse(typeof(ItemType), splitLine[4].Remove(0, 4)));
+    }
+
+    void AddType(ItemListData typeData)
+    {
+        GetWindow<ItemDatabaseEditorWindow>().Close();  //To prevent any errors, we don't let them be open at the same time
+
+        //Gets the window if there is one, or creates a new one if there is none
+        ItemTypeEditorWindow window = GetWindow<ItemTypeEditorWindow>(false, "Add Item Type", true);
+        window.GenerateExistingTypeDirectly(typeData.className, typeData.type);
+    }
+
+    void AddSubtype(ItemType mainType, string subtypeName)
+    {
+        GetWindow<ItemDatabaseEditorWindow>().Close();  //To prevent any errors, we don't let them be open at the same time
+
+        //Gets the window if there is one, or creates a new one if there is none
+        ItemTypeEditorWindow window = GetWindow<ItemTypeEditorWindow>(false, "Add Item Type", true);
+
+        if (!window.SubtypeExists(mainType, subtypeName))
+            window.GenerateSubtypeDirectly(mainType, subtypeName);
+    }
+
+    void MoveItems()
+    {
+        //#VID-TIB
+        //#VID-TIE
+    }
+
+    void CheckTempSettings()
+    {
+        if (!File.Exists(tempSettingsFullPath))
+            return;
+
+        addedItemTypes = true;  //As long as the file exists, this will be true
+        readyForFinalTransfer = File.ReadAllText(tempSettingsFullPath).Trim() == "True";
+    }
+
+    private class ItemListData
+    {
+        public string className;
+        public ItemType type;
+
+        public ItemListData(string name, ItemType itemType)
+        {
+            className = name;
+            type = itemType;
+        }
+    }
+}

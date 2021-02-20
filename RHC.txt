@@ -1,0 +1,22 @@
+    public Room(int i, Rect r) {
+        Id = i;
+        Rect = r;
+    }
+
+    public Hall(int i)
+    {
+        Id = i;
+        Crumbs = new List<Vector2>();
+        Paths = new List<Vector2>();
+    }
+
+    public Connector(int i, int cx, int cy, int creg1, int creg2, int ctype, int orient)
+    {
+        Id = i;
+        X = cx;
+        Y = cy;
+        Reg1 = creg1;
+        Reg2 = creg2;
+        Type = ctype;
+        Orient = orient;
+    }
