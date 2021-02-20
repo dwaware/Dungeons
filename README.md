@@ -26,10 +26,10 @@ Next step: Populating the map with item sprites and managing interactions.  This
 
 ![dungeons](https://user-images.githubusercontent.com/74695555/108611189-59e06200-7399-11eb-9f95-7fcdd9c643f2.png)
 
-The minimap:
+The minimap with fog off:
 
 ![minimap2](https://user-images.githubusercontent.com/74695555/108611319-cf006700-739a-11eb-84e6-48bbfc6add93.png)
 
-A room:
+A room with visibility limited by the player's torch radius:
 
 ![room2](https://user-images.githubusercontent.com/74695555/108611320-d0319400-739a-11eb-84b8-6de772973853.png)
