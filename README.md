@@ -1,6 +1,6 @@
 # RACD
  
-Randomizing Algorithm for Creating Dundgeons!
+Randomizing Algorithm for Creating Dungeons!
 
 My first Unity project (2017) is a tile scroll dungeon with an animated avatar.  The algorith was inspired by a blog post but the code is original. :)
 
