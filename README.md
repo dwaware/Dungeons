@@ -10,17 +10,17 @@ but the code is original and the project features much more than just a randomly
 
 Features:
 
-    * random map creation by seed
-    * carving and backtracking algorithm ensures the entire map is utilized
-    * all rooms and passages can be reached from any starting location (no dead ends)
-    * invisible secret doors provide additional routes through the dungeon...
-    * ...but they are visible on the minimap for the time being if you look carefully!!!
-    * animated avatar
-    * minimap fog (currently turned off)
-    * shift-key increases movement rate / animation speed
-    * sprite array for managing map tiles
-    * object serialization (save/load level and other game state data)
-    * escape key menu for user input and informative/instructive text
+* random map creation by seed
+* carving and backtracking algorithm ensures the entire map is utilized
+* all rooms and passages can be reached from any starting location (no dead ends)
+* invisible secret doors provide additional routes through the dungeon...
+* ...but they are visible on the minimap for the time being if you look carefully!!!
+* animated avatar
+* minimap fog (currently turned off)
+* shift-key increases movement rate / animation speed
+* sprite array for managing map tiles
+* object serialization (save/load level and other game state data)
+* escape key menu for user input and informative/instructive text
 
 Next step: Populating the map with item sprites and managing interactions.  This was previously implemented using a third-party tool from the Unity store but I decided to remove it and start on my own system.
 
