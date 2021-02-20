@@ -1,2 +1,2 @@
-# RandomDungeon
- A random dungeon generator with minimap and movable avatar...
+# Dungeons
+ A dungeon app!
