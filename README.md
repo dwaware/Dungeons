@@ -1,2 +1,2 @@
-# DungeonMaker
- A random dungeon in Unity.
+# RandomDungeon
+ A random dungeon generator with minimap and movable avatar...
