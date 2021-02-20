@@ -10,7 +10,7 @@ but the code is original.
 
 Features:
 
-* random room creation by seed
+* random map creation by seed
 * carving and backtracking algorithm ensures the entire map is utilized
 * every room can be reached by a series of doors and passages
 * secret doors provide additional routes through the dungeon...
