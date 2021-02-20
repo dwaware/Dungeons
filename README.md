@@ -16,6 +16,7 @@ Features:
     invisible secret doors provide additional routes through the dungeon...
     ...but they are visible on the minimap for the time being if you look carefully!!!
     animated avatar
+    minimap fog (currently turned off)
     shift-key increases movement rate / animation speed
     sprite array for managing map tiles
     object serialization (save/load level and other game state data)
