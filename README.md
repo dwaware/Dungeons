@@ -21,4 +21,4 @@ Features:
 
 ![racd](https://user-images.githubusercontent.com/74695555/108581058-9fdeec80-72eb-11eb-95fe-32e8bc4f35fe.png)
 
-Next step is populating the map with item sprites and managing interactions.
+Next step:  Populating the map with item sprites and managing interactions.
