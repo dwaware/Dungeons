@@ -1,2 +1,2 @@
 # DungeonMaker
- A random dungeon maker with minmap.
+ A random dungeon in Unity.
