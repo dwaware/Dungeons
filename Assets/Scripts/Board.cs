@@ -92,7 +92,12 @@ public class Board : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int x = plr.X;
+        if (Input.GetKeyUp(KeyCode.T))
+        {
+            ToggleTorch();
+        }
+
+            int x = plr.X;
         int y = plr.Y;
         //Debug.Log("Player x,y:  " + x + " " + y);
 

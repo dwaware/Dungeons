@@ -9,14 +9,13 @@ public class GameManager : MonoBehaviour
     private Player playerScript;
     private Board boardScript;                      //Store a reference to our BoardManager which will set up the level.
     private MiniBoard miniBoardScript;
-    private ItemList itemListScript;
     private GameObject canvas;
 
     //Start
     void Start()
     {
         canvas = GameObject.Find("Canvas");
-        canvas.SetActive(false);
+        canvas.SetActive(true);
     }
 
     //Update is called every frame.
@@ -57,7 +56,6 @@ public class GameManager : MonoBehaviour
         playerScript = GetComponent<Player>();
         boardScript = GetComponent<Board>();
         miniBoardScript = GetComponent<MiniBoard>();
-        itemListScript = GetComponent<ItemList>();
 
         //Call the InitGame function to initialize the first level 
         InitGame();
@@ -72,9 +70,6 @@ public class GameManager : MonoBehaviour
         playerScript.InitPlayer();
         boardScript.SetupScene();
         miniBoardScript.SetupScene();
-
-        //leaving this out for now -- WIP!
-        //itemListScript.Init();
     }
 
     public void ExitGame()

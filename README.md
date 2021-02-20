@@ -1,2 +1,2 @@
-# RACD
- Randomizing Algorithm for Creating Dungeons
+# DungeonMaker
+ A random dungeon maker with minmap.
