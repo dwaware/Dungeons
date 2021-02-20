@@ -12,9 +12,9 @@ Features:
 
 * random map creation by seed
 * carving and backtracking algorithm ensures the entire map is utilized
-* every room and passage can be reached by a series of doors and passages
-* secret doors provide additional routes through the dungeon...
-* ...but they are visible on the minimap if you look carefully!!
+* all rooms and passages can be reached from any starting location (no dead ends)
+* invisible secret doors provide additional routes through the dungeon...
+* ...but they are visible on the minimap for the time being if you look carefully!!!
 * animated avatar
 * shift-key increases movement rate / animation speed
 * object serialization (save/load level)
