@@ -24,12 +24,14 @@ Features:
 
 Next step: Populating the map with item sprites and managing interactions.  This was previously implemented using a third-party tool from the Unity store but I decided to remove it and start on my own system.
 
+Note the large room has visibility limited by the player's torch radius:
+
 ![dungeons](https://user-images.githubusercontent.com/74695555/108611189-59e06200-7399-11eb-9f95-7fcdd9c643f2.png)
 
 The minimap with fog off:
 
 ![minimap2](https://user-images.githubusercontent.com/74695555/108611319-cf006700-739a-11eb-84e6-48bbfc6add93.png)
 
-A room with visibility limited by the player's torch radius:
+A room with a door (and the player):
 
 ![room2](https://user-images.githubusercontent.com/74695555/108611320-d0319400-739a-11eb-84b8-6de772973853.png)
