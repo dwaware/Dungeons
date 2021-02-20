@@ -17,7 +17,7 @@ Features:
 * ...but they are visible on the minimap for the time being if you look carefully!!!
 * animated avatar
 * shift-key increases movement rate / animation speed
-* object serialization (save/load level)
+* object serialization (save/load level and other game state data)
 
 ![racd](https://user-images.githubusercontent.com/74695555/108581058-9fdeec80-72eb-11eb-95fe-32e8bc4f35fe.png)
 
