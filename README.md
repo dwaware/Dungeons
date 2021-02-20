@@ -21,4 +21,6 @@ Features:
     object serialization (save/load level and other game state data)
     escape key menu for user input and informative/instructive text
 
-Next step: Populating the map with item sprites and managing interactions.
+Next step: Populating the map with item sprites and managing interactions.  This was previously implemented using a third-party tool from the Unity store but I decided to remove it and start on my own implementation.
+
+![dungeons](https://user-images.githubusercontent.com/74695555/108611189-59e06200-7399-11eb-9f95-7fcdd9c643f2.png)
