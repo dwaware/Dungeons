@@ -2,7 +2,7 @@
  
 Randomizing Algorithm for Creating Dungeons!
 
-My first Unity project (2017) is a tile scroll dungeon with an animated avatar.  The algorithm was inspired by a blog post:
+My first Unity project (2017) is a tile scroll dungeon with an animated avatar.  The concept was inspired by a blog post:
 
 https://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/
 
