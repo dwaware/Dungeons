@@ -6,7 +6,7 @@ My first Unity project (2017) is a tile scroll dungeon with an animated avatar. 
 
 https://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/
 
-but the code is original.
+but the code is original and the project features much more than just a randomly generated map.
 
 Features:
 
